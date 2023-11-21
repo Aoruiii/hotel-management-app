@@ -48,6 +48,7 @@ function App() {
         <Toaster
           position="top-center"
           gutter={12}
+          containerStyle={{ margin: "8px" }}
           toastOptions={{
             success: {
               duration: 3000,
@@ -62,9 +63,6 @@ function App() {
               backgroundColor: "var(--color-grey-0)",
               color: "var(--color-grey-700)",
             },
-          }}
-          containerStyle={{
-            margin: 8,
           }}
         />
       </QueryClientProvider>
