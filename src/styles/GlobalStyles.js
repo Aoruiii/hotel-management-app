@@ -19,6 +19,7 @@ const GlobalStyles = createGlobalStyle`
 :root {
   /* Indigo */
   background-color: --color-brand-600;
+  --color-brand-50:#e0e7ff;
   --color-brand-100: #e0e7ff;
   --color-brand-200: #c7d2fe;
   --color-brand-500: #6366f1;
