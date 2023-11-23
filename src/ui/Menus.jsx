@@ -1,4 +1,8 @@
+import { createContext, useContext, useState } from "react";
+import { createPortal } from "react-dom";
+import { HiEllipsisVertical } from "react-icons/hi2";
 import styled from "styled-components";
+import useClickOutside from "../hooks/useClickOutside";
 
 const StyledMenu = styled.div`
   display: flex;
@@ -60,3 +64,80 @@ const StyledButton = styled.button`
     transition: all 0.3s;
   }
 `;
+
+const MenusContext = createContext();
+
+function Menus({ children }) {
+  const [currentId, setCurrentId] = useState("");
+  const [listPosition, setListPosition] = useState(null);
+
+  const open = setCurrentId;
+  const close = () => setCurrentId("");
+
+  return (
+    <MenusContext.Provider
+      value={{ currentId, open, close, listPosition, setListPosition }}
+    >
+      {children}
+    </MenusContext.Provider>
+  );
+}
+
+function Menu({ children }) {
+  return <StyledMenu>{children}</StyledMenu>;
+}
+
+function Toggle({ id }) {
+  const { currentId, open, close, setListPosition } = useContext(MenusContext);
+  function handleClick(e) {
+    currentId === "" || currentId !== id ? open(id) : close();
+
+    const rect = e.target.closest("button").getBoundingClientRect();
+    // console.log(rect);
+    // console.log(window.innerWidth);
+    setListPosition({
+      x: window.innerWidth - rect.right,
+      y: rect.bottom + 5,
+    });
+  }
+  return (
+    <StyledToggle onClick={handleClick}>
+      <HiEllipsisVertical />
+    </StyledToggle>
+  );
+}
+
+function List({ children, id }) {
+  const { currentId, listPosition, close } = useContext(MenusContext);
+  const { ref } = useClickOutside(close);
+  if (currentId !== id) return null;
+
+  return createPortal(
+    <StyledList position={listPosition} ref={ref}>
+      {children}
+    </StyledList>,
+    document.body
+  );
+}
+
+function Button({ children, onClick, disabled }) {
+  const { close } = useContext(MenusContext);
+  function handleClick() {
+    onClick?.();
+    close();
+  }
+  return (
+    <li>
+      <StyledButton onClick={handleClick} disabled={disabled}>
+        {children}
+      </StyledButton>
+    </li>
+  );
+}
+
+Menus.Menu = Menu;
+Menus.Toggle = Toggle;
+Menus.List = List;
+Menus.Button = Button;
+
+export default Menus;

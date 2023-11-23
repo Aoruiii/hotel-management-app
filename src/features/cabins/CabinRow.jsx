@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { useState } from "react";
 import { useDeleteCabin } from "./useDeleteCabin";
 
 import { formatCurrency } from "../../utils/helpers";
@@ -7,18 +6,10 @@ import CreateCabinForm from "./CreateCabinForm";
 
 import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
 import { useCreateCabin } from "./useCreateCabin";
-
-const TableRow = styled.div`
-  display: grid;
-  grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
-  column-gap: 2.4rem;
-  align-items: center;
-  padding: 1.4rem 2.4rem;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-`;
+import Table from "../../ui/Table";
+import Menus from "../../ui/Menus";
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
 
 const Img = styled.img`
   display: block;
@@ -50,7 +41,6 @@ const Discount = styled.div`
 function CabinRow({ cabin }) {
   const { id, name, maxCapacity, regularPrice, discount, description, image } =
     cabin;
-  const [showEditForm, setShowEditForm] = useState(false);
   const { deleteCabin, isDeleting } = useDeleteCabin();
   const { createCabin, isCreating } = useCreateCabin();
 
@@ -59,29 +49,77 @@ function CabinRow({ cabin }) {
     createCabin({ name: `Copy of ${originalName}`, ...newCabinInfo });
   }
   return (
-    <>
-      <TableRow>
-        <Img src={image}></Img>
-        <Cabin>{name}</Cabin>
-        <p>Up to {maxCapacity} guests</p>
-        <Price>{formatCurrency(regularPrice)}</Price>
-        <Discount>
-          {discount > 0 ? formatCurrency(discount) : <span>&mdash;</span>}
-        </Discount>
-        <div>
-          <button onClick={handleDuplicate} disabled={isCreating}>
-            <HiSquare2Stack />
-          </button>
-          <button onClick={() => setShowEditForm((show) => !show)}>
+    <Table.Row>
+      <Img src={image}></Img>
+      <Cabin>{name}</Cabin>
+      <p>Up to {maxCapacity} guests</p>
+      <Price>{formatCurrency(regularPrice)}</Price>
+      <Discount>
+        {discount > 0 ? formatCurrency(discount) : <span>&mdash;</span>}
+      </Discount>
+
+      <div>
+        {/* <button onClick={handleDuplicate} disabled={isCreating}>
+          <HiSquare2Stack />
+        </button>
+
+        <EditCabin cabinToEdit={cabin}>
+          <button>
             <HiPencil />
           </button>
-          <button onClick={() => deleteCabin(id)} disabled={isDeleting}>
+        </EditCabin>
+
+        <DeleteCabin
+          cabinToDelete={cabin}
+          deleteCabin={deleteCabin}
+          isDeleting={isDeleting}
+          name={name}
+          id={id}
+        >
+          <button>
             <HiTrash />
           </button>
-        </div>
-      </TableRow>
-      {showEditForm && <CreateCabinForm cabinToEdit={cabin} />}
-    </>
+        </DeleteCabin> */}
+
+        <Modal>
+          <Menus.Menu>
+            <Menus.Toggle id={id} />
+            <Menus.List id={id}>
+              <Menus.Button onClick={handleDuplicate} disabled={isCreating}>
+                <HiSquare2Stack />
+                <span>Duplicate</span>
+              </Menus.Button>
+
+              <Modal.Open window="cabin-edit-form">
+                <Menus.Button>
+                  <HiPencil />
+                  <span>Edit</span>
+                </Menus.Button>
+              </Modal.Open>
+
+              <Modal.Open window="delete-cabin">
+                <Menus.Button>
+                  <HiTrash />
+                  <span>Delete</span>
+                </Menus.Button>
+              </Modal.Open>
+            </Menus.List>
+
+            <Modal.Window name="cabin-edit-form">
+              <CreateCabinForm cabinToEdit={cabin} />
+            </Modal.Window>
+
+            <Modal.Window name="delete-cabin">
+              <ConfirmDelete
+                resourceName={`Cabin ${name}`}
+                onConfirm={() => deleteCabin(id)}
+                disabled={isDeleting}
+              />
+            </Modal.Window>
+          </Menus.Menu>
+        </Modal>
+      </div>
+    </Table.Row>
   );
 }
 

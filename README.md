@@ -29,16 +29,23 @@ This is a Single-Page Appication(SPA) based on REACT, Javascript, JSX, HTML5 and
 
 **## Features**
 
-1. Authentication
+1. Authentication and Authorizaation
 2. Cabins Management
 
-- upload files
+- Create Cabin data
+- Delete Cabin data
+- Update Cabin data
+- Duplicate Cabin date
+- Upload image file
+- Filter/Sort
+- Pagination
 
 3. Bookings Management
 4. Check-in/Check-out
 5. Guest Management
-6. Dashboard
-7. Settings
+6. Dashboard with Charts
+7. Dark Mode
+8. Settings
 
 **## Screenshots/GIFs**
 
