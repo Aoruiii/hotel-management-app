@@ -3,9 +3,12 @@ import { format, isToday } from "date-fns";
 
 import Tag from "../../ui/Tag";
 import Table from "../../ui/Table";
+import Menus from "../../ui/Menus";
+import Modal from "../../ui/Modal";
 
 import { formatCurrency } from "../../utils/helpers";
 import { formatDistanceFromNow } from "../../utils/helpers";
+import BookingDetail from "./BookingDetail";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -34,8 +37,14 @@ const Amount = styled.div`
   font-weight: 500;
 `;
 
-function BookingRow({
-  booking: {
+function BookingRow({ booking = {} }) {
+  const statusToTagName = {
+    unconfirmed: "blue",
+    "checked-in": "green",
+    "checked-out": "silver",
+  };
+
+  const {
     id: bookingId,
     created_at,
     startDate,
@@ -46,13 +55,7 @@ function BookingRow({
     status,
     guests: { fullName: guestName, email },
     cabins: { name: cabinName },
-  },
-}) {
-  const statusToTagName = {
-    unconfirmed: "blue",
-    "checked-in": "green",
-    "checked-out": "silver",
-  };
+  } = booking;
 
   return (
     <Table.Row>
@@ -79,6 +82,21 @@ function BookingRow({
       <Tag type={statusToTagName[status]}>{status?.replace("-", " ")}</Tag>
 
       <Amount>{formatCurrency(totalPrice)}</Amount>
+
+      {/* <Modal>
+        <Menus.Menu>
+          <Menus.Toggle />
+          <Menus.List>
+            <Modal.Open>
+              <Menus.Button>Details</Menus.Button>
+            </Modal.Open>
+          </Menus.List>
+        </Menus.Menu>
+
+        <Modal.Window>
+          <BookingDetail booking={booking} />
+        </Modal.Window>
+      </Modal> */}
     </Table.Row>
   );
 }

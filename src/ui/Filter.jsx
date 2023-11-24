@@ -34,11 +34,11 @@ const FilterButton = styled.button`
     color: var(--color-brand-100);
   }
 `;
-function Filter({ filterName, options = [] }) {
+function Filter({ field, options = [] }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeFilter = searchParams.get(filterName);
+  const activeFilter = searchParams.get(field);
   function handleClick(filterValue) {
-    searchParams.set(filterName, filterValue);
+    searchParams.set(field, filterValue);
     setSearchParams(searchParams);
   }
 

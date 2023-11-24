@@ -6,7 +6,7 @@ function BookingTableOperations() {
   return (
     <TableOperations>
       <Filter
-        filterField="status"
+        field="status"
         options={[
           { value: "all", label: "All" },
           { value: "checked-out", label: "Checked out" },
@@ -17,13 +17,13 @@ function BookingTableOperations() {
 
       <SortBy
         options={[
-          { value: "startDate-desc", label: "Sort by date (recent first)" },
-          { value: "startDate-asc", label: "Sort by date (earlier first)" },
+          { value: "startDate-desc", label: "Sort by date (recent-earlier)" },
+          { value: "startDate-asc", label: "Sort by date (earlier-recent)" },
           {
             value: "totalPrice-desc",
-            label: "Sort by amount (high first)",
+            label: "Sort by amount (high-low)",
           },
-          { value: "totalPrice-asc", label: "Sort by amount (low first)" },
+          { value: "totalPrice-asc", label: "Sort by amount (low-high)" },
         ]}
       />
     </TableOperations>
