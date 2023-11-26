@@ -6,8 +6,14 @@ import Heading from "../../ui/Heading";
 import ButtonGroup from "../../ui/ButtonGroup";
 import Button from "../../ui/Button";
 import ButtonText from "../../ui/ButtonText";
+import Checkbox from "../../ui/Checkbox";
 
 import { useMoveBack } from "../../hooks/useMoveBack";
+import { useParams } from "react-router-dom";
+import { useBooking } from "../bookings/useBooking";
+import Spinner from "../../ui/Spinner";
+import { useEffect, useState } from "react";
+import useCheckin from "./useCheckin";
 
 const Box = styled.div`
   /* Box */
@@ -19,8 +25,18 @@ const Box = styled.div`
 
 function CheckinBooking() {
   const moveBack = useMoveBack();
+  const { booking, isLoading } = useBooking();
+  const [isChecked, setIsChecked] = useState(false);
+  const { isCheckingin, checkin } = useCheckin();
 
-  const booking = {};
+  useEffect(
+    function () {
+      setIsChecked(booking?.isPaid || false);
+    },
+    [booking?.isPaid]
+  );
+
+  if (isLoading) return <Spinner />;
 
   const {
     id: bookingId,
@@ -31,7 +47,9 @@ function CheckinBooking() {
     numNights,
   } = booking;
 
-  function handleCheckin() {}
+  function handleCheckin() {
+    if (bookingId) checkin(bookingId);
+  }
 
   return (
     <>
@@ -42,8 +60,20 @@ function CheckinBooking() {
 
       <BookingDataBox booking={booking} />
 
+      <Box>
+        <Checkbox
+          checked={isChecked}
+          onChange={() => setIsChecked((isChecked) => !isChecked)}
+          disabled={booking?.isPaid || isCheckingin}
+        >
+          I confirm that this booking has been paid.
+        </Checkbox>
+      </Box>
+
       <ButtonGroup>
-        <Button onClick={handleCheckin}>Check in booking #{bookingId}</Button>
+        <Button onClick={handleCheckin} disabled={!isChecked || isCheckingin}>
+          Check in booking #{bookingId}
+        </Button>
         <Button variation="secondary" onClick={moveBack}>
           Back
         </Button>
