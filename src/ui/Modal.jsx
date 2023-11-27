@@ -80,8 +80,8 @@ function Open({ window = "", children }) {
 
 function Window({ name = "", children }) {
   const { windowName, close } = useContext(ModalContext);
-  console.log("windowName", windowName);
-  console.log("name", name);
+  // console.log("windowName", windowName);
+  // console.log("name", name);
 
   const { ref } = useClickOutside(close);
 

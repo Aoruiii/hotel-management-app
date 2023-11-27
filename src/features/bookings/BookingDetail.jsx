@@ -12,6 +12,10 @@ import Spinner from "../../ui/Spinner";
 import { useMoveBack } from "../../hooks/useMoveBack";
 import { useBooking } from "./useBooking";
 import { useNavigate } from "react-router-dom";
+import { useCheckout } from "../check-in-out/useCheckout";
+import Modal from "../../ui/Modal";
+import { useDeleteBooking } from "./useDeleteBooking";
+import ConfirmDelete from "../../ui/ConfirmDelete";
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -20,11 +24,16 @@ const HeadingGroup = styled.div`
 `;
 
 function BookingDetail() {
-  const { booking, isLoading, error } = useBooking();
+  const { booking, isLoading } = useBooking();
   const navigate = useNavigate();
   const moveBack = useMoveBack();
+  const { isCheckingout, checkout } = useCheckout();
+  const { isDeleting, deleteBooking } = useDeleteBooking();
 
-  const { status, id } = booking || {};
+  if (isLoading) return <Spinner />;
+
+  const { status, id, guests } = booking || {};
+  console.log(booking);
 
   const statusToTagName = {
     unconfirmed: "blue",
@@ -32,7 +41,11 @@ function BookingDetail() {
     "checked-out": "silver",
   };
 
-  if (isLoading) return <Spinner />;
+  function handleDelete() {
+    deleteBooking(id);
+    navigate("/bookings");
+  }
+
   return (
     <>
       <Row type="horizontal">
@@ -51,6 +64,24 @@ function BookingDetail() {
             <span> Check in</span>
           </Button>
         )}
+        {status === "checked-in" && (
+          <Button onClick={() => checkout(id)} disabled={isCheckingout}>
+            <span> Check out</span>
+          </Button>
+        )}
+        <Modal>
+          <Modal.Open window="delete-booking">
+            <Button variation="danger">Delete booking</Button>
+          </Modal.Open>
+
+          <Modal.Window name="delete-booking">
+            <ConfirmDelete
+              resourceName={`booking of ${guests.fullName}`}
+              onConfirm={handleDelete}
+              disabled={isDeleting}
+            />
+          </Modal.Window>
+        </Modal>
         <Button variation="secondary" onClick={moveBack}>
           Back
         </Button>
