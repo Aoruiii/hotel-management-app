@@ -10,7 +10,7 @@ export const guests = [
     countryFlag: "https://flagcdn.com/pt.svg",
   },
   {
-    fullName: "Aorui TanJonas Schmedtmann",
+    fullName: "Jonas Schmedtmann",
     email: "hello@jonas.io",
     nationality: "Great Britain",
     nationalID: "4534593454",
