@@ -111,6 +111,8 @@ function Toggle({ id }) {
 function List({ children, id }) {
   const { currentId, listPosition, close } = useContext(MenusContext);
   const { ref } = useClickOutside(close, false);
+  // console.log("currentId", currentId);
+  // console.log("id", id);
   if (currentId !== id) return null;
 
   return createPortal(
@@ -123,6 +125,7 @@ function List({ children, id }) {
 
 function Button({ children, onClick, disabled }) {
   const { close } = useContext(MenusContext);
+  // console.log("onClick", onClick);
   function handleClick() {
     onClick?.();
     close();

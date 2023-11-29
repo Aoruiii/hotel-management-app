@@ -60,7 +60,7 @@ export const ModalContext = createContext();
 function Modal({ children }) {
   const [windowName, setWindowName] = useState("");
 
-  const open = setWindowName;
+  const open = (window) => setWindowName(window);
   const close = () => setWindowName("");
 
   return (
@@ -71,22 +71,21 @@ function Modal({ children }) {
 }
 
 // 3. create child components
-function Open({ window = "", children }) {
+function Open({ window, children }) {
+  // console.log("window11111", window);
   const { open } = useContext(ModalContext);
-  // console.log("window", window);
 
   return cloneElement(children, { onClick: () => open(window) });
 }
 
 function Window({ name = "", children }) {
   const { windowName, close } = useContext(ModalContext);
-  // console.log("windowName", windowName);
+  console.log("windowName", windowName);
   // console.log("name", name);
 
-  const { ref } = useClickOutside(close);
+  const { ref } = useClickOutside(close, true);
 
   if (name !== windowName) return null;
-
   return createPortal(
     <Overlay>
       <StyledModal ref={ref}>

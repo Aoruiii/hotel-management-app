@@ -7,6 +7,7 @@ import { useCabins } from "./useCabins";
 import Table from "../../ui/Table";
 import Menus from "../../ui/Menus";
 import { useSearchParams } from "react-router-dom";
+import Modal from "../../ui/Modal";
 
 function CabinTable() {
   const { cabins, isLoading } = useCabins();
