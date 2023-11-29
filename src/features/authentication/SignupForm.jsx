@@ -4,7 +4,7 @@ import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
 import SpinnerMini from "../../ui/SpinnerMini";
-import { useSignup } from "./useSIgnup";
+import { useSignup } from "./useSignup";
 
 function SignupForm() {
   const {
