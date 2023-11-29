@@ -1,4 +1,14 @@
 import styled from "styled-components";
+import { useDarkMode } from "../../context/DarkModeContext";
+import {
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
+import Heading from "../../ui/Heading";
 
 const ChartBox = styled.div`
   /* Box */
@@ -105,8 +115,6 @@ const startDataDark = [
 ];
 
 function prepareData(startData, stays) {
-  // A bit ugly code, but sometimes this is what it takes when working with real data 😅
-
   function incArrayValue(arr, field) {
     return arr.map((obj) =>
       obj.duration === field ? { ...obj, value: obj.value + 1 } : obj
@@ -130,3 +138,48 @@ function prepareData(startData, stays) {
 
   return data;
 }
+
+function DurationChart({ confirmedStays }) {
+  const { isDarkMode } = useDarkMode();
+  const startData = isDarkMode ? startDataDark : startDataLight;
+  const data = prepareData(startData, confirmedStays);
+
+  return (
+    <ChartBox>
+      <Heading as="h2">Stay Duration Summary</Heading>
+      <ResponsiveContainer width="100%" height={240}>
+        <PieChart>
+          <Pie
+            data={data}
+            nameKey="duration"
+            dataKey="value"
+            innerRadius={80}
+            outerRadius={110}
+            cx="50%"
+            cy="50%"
+            paddingAngle={2}
+          >
+            {data.map((entry) => (
+              <Cell
+                key={entry.duration}
+                stroke={entry.color}
+                fill={entry.color}
+              />
+            ))}
+          </Pie>
+          <Legend
+            align="right"
+            verticalAlign="middle"
+            width="30%"
+            layout="vertical"
+            iconType="circle"
+            iconSize={10}
+          />
+          <Tooltip />
+        </PieChart>
+      </ResponsiveContainer>
+    </ChartBox>
+  );
+}
+
+export default DurationChart;

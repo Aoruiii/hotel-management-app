@@ -1,8 +1,13 @@
 import styled from "styled-components";
+import Tag from "../../ui/Tag";
+import Button from "../../ui/Button";
+import { Flag } from "../../ui/Flag";
+import { Link } from "react-router-dom";
+import { useCheckout } from "./useCheckout";
 
 const StyledTodayItem = styled.li`
   display: grid;
-  grid-template-columns: 9rem 2rem 1fr 7rem 9rem;
+  grid-template-columns: 9rem 1fr 7rem 10.5rem;
   gap: 1.2rem;
   align-items: center;
 
@@ -18,3 +23,49 @@ const StyledTodayItem = styled.li`
 const Guest = styled.div`
   font-weight: 500;
 `;
+
+function TodayItem({ activity }) {
+  const {
+    id,
+    status,
+    numNights,
+    guests: { fullName, country, countryFlag },
+  } = activity;
+
+  const { isCheckingout, checkout } = useCheckout();
+
+  return (
+    <StyledTodayItem>
+      {status === "unconfirmed" && <Tag type="green">Arriving</Tag>}
+      {status === "checked-in" && <Tag type="blue">Leaving</Tag>}
+
+      {/* <Flag src={countryFlag} alt={`flag of ${country}`} /> */}
+
+      <Guest>{fullName}</Guest>
+      <div>{numNights} nights</div>
+
+      {status === "unconfirmed" && (
+        <Button
+          size="small"
+          variation="primary"
+          as={Link}
+          to={`/check-in/${id}`}
+        >
+          Check in
+        </Button>
+      )}
+      {status === "checked-in" && (
+        <Button
+          size="small"
+          variation="primary"
+          onClick={() => checkout(id)}
+          disabled={isCheckingout}
+        >
+          Check out
+        </Button>
+      )}
+    </StyledTodayItem>
+  );
+}
+
+export default TodayItem;
