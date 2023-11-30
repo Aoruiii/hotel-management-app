@@ -32,7 +32,7 @@ function App() {
     <>
       <DarkModeProvider>
         <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools />
+          {/* <ReactQueryDevtools /> */}
           <GloabalStyles />
 
           <BrowserRouter>
